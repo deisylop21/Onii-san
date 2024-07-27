@@ -2,12 +2,20 @@
 include('connection.php');
 
 // Consulta para el empleado "Vendedor" con más ventas
-$query1 = "SELECT ID_empleado, nombre_empleado, apellido_empleado, COUNT(*) AS total_ventas FROM vista_ventas GROUP BY ID_empleado ORDER BY total_ventas DESC LIMIT 1;";
+$query1 = "SELECT v.ID_empleado, e.foto_empleado, v.nombre_empleado, v.apellido_empleado, COUNT(*) AS total_ventas
+            FROM vista_ventas v
+            JOIN empleado e ON v.ID_empleado = e.ID_empleado
+            GROUP BY v.ID_empleado, e.foto_empleado, v.nombre_empleado, v.apellido_empleado
+            ORDER BY total_ventas DESC 
+            LIMIT 1;";
 $result1 = mysqli_query($conn, $query1);
 $vendedor_top = mysqli_fetch_assoc($result1);
 
 // Consulta para la última venta realizada y el nombre del cliente
-$query2 = "SELECT nombre, apellido FROM cliente WHERE ID_cliente = (SELECT ID_cliente FROM ventas ORDER BY fecha_venta DESC LIMIT 1);";
+$query2 = "SELECT v.ID_venta, c.nombre, c.apellido, v.fecha_venta
+            FROM cliente c
+            JOIN ventas v ON c.ID_cliente = v.ID_cliente
+            WHERE v.fecha_venta = (SELECT MAX(fecha_venta) FROM ventas);";
 $result2 = mysqli_query($conn, $query2);
 $ultima_venta = mysqli_fetch_assoc($result2);
 
@@ -42,11 +50,10 @@ $en_proceso = mysqli_fetch_assoc($result4);
     <div class="container">
         <nav class="nav">
             <ul>
-                <li><a href="pagina_gerente.php">Menú</a></li>
-                <li><a href="empleados.php">Empleados</a></li>
-                <li><a href="coches.php">Coches</a></li>
-                <li><a href="ventas.php">Ventas</a></li>
-                <li class="profile-button"><a href="perfil_gerente.php">Perfil</a></li>
+                <li><a href="gerente_main.php">Menú</a></li>
+                <li><a href="gerente_empleados.php">Empleados</a></li>
+                <li><a href="gerente_coches.php">Coches</a></li>
+                <li><a href="gerente_ventas.php">Ventas</a></li>
             </ul>
         </nav>
         <div class="main-content">
@@ -62,8 +69,9 @@ $en_proceso = mysqli_fetch_assoc($result4);
             <div class="cards">
                 <div class="card">
                     <h2>Vendedor con más ventas</h2>
-                    <p>Nombre: <?php echo $vendedor_top['nombre']; ?> <?php echo $vendedor_top['apellido']; ?></p>
+                    <p>Nombre: <?php echo $vendedor_top['nombre_empleado']; ?> <?php echo $vendedor_top['apellido_empleado']; ?></p>
                     <p>Total Ventas: <?php echo $vendedor_top['total_ventas']; ?></p>
+                    <img src="<?php echo $vendedor_top['foto_empleado']; ?>" class="employee-photo">
                 </div>
                 <div class="card">
                     <h2>Última venta realizada</h2>

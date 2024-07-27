@@ -20,11 +20,10 @@
         <!-- Lateral Navigation -->
         <nav class="nav">
             <ul>
-                <li><a href="pagina_gerente.php">Menú</a></li>
-                <li><a href="empleados.php">Empleados</a></li>
-                <li><a href="coches.php">Coches</a></li>
-                <li><a href="ventas.php">Ventas</a></li>
-                <li class="profile-button"><a href="perfil_gerente.php">Perfil</a></li>
+                <li><a href="gerente_main.php">Menú</a></li>
+                <li><a href="gerente_empleados.php">Empleados</a></li>
+                <li><a href="gerente_coches.php">Coches</a></li>
+                <li><a href="gerente_ventas.php">Ventas</a></li>
             </ul>
         </nav>
         
@@ -43,10 +42,10 @@
             
             <!-- Botones para consultar empleados por puesto -->
             <div class="buttons">
-                <button onclick="window.location.href='consulta_coches.php?disponibilidad=Disponible'">Consultar coches disponibles</button>
-                <button onclick="window.location.href='consulta_coches.php?disponibilidad=Vendido'">Consultar coches vendidos</button>
-                <button onclick="window.location.href='consulta_coches.php?disponibilidad=En servicio'">Consultar coches en servicio</button>
-                <button onclick="window.location.href='agregar_coches.php'">Agregar un nuevo coche</button>
+                <button onclick="window.location.href='gerente_consulta_coches.php?disponibilidad=Disponible'">Consultar coches disponibles</button>
+                <button onclick="window.location.href='gerente_consulta_coches.php?disponibilidad=Vendido'">Consultar coches vendidos</button>
+                <button onclick="window.location.href='gerente_consulta_coches.php?disponibilidad=En servicio'">Consultar coches en servicio</button>
+                <button onclick="window.location.href='gerente_agregar_coches.php'">Agregar un nuevo coche</button>
             </div>
         </div>
     </div>

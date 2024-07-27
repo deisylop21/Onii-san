@@ -33,11 +33,10 @@ if (!$result) {
         <!-- Lateral Navigation -->
         <nav class="nav">
             <ul>
-                <li><a href="pagina_gerente.php">Menú</a></li>
-                <li><a href="empleados.php">Empleados</a></li>
-                <li><a href="coches.php">Coches</a></li>
-                <li><a href="ventas.php">Ventas</a></li>
-                <li class="profile-button"><a href="perfil_gerente.php">Perfil</a></li>
+                <li><a href="gerente_main.php">Menú</a></li>
+                <li><a href="gerente_empleados.php">Empleados</a></li>
+                <li><a href="gerente_coches.php">Coches</a></li>
+                <li><a href="gerente_ventas.php">Ventas</a></li>
             </ul>
         </nav>
         
@@ -63,7 +62,7 @@ if (!$result) {
                     <p>Turno: <?php echo htmlspecialchars($row['turno']); ?></p>
                     <img src="<?php echo htmlspecialchars($row['foto_empleado']); ?>" alt="Foto de <?php echo htmlspecialchars($row['nombre']); ?>" class="employee-photo">
                     <div class="card-buttons">
-                        <form action="dar_de_baja.php" method="post" style="display:inline;" 
+                        <form action="gerente_dar_de_baja.php" method="post" style="display:inline;" 
                             data-nombre="<?php echo htmlspecialchars($row['nombre']); ?>" 
                             data-apellido="<?php echo htmlspecialchars($row['apellido']); ?>"
                             onsubmit="return confirmDeletion(this);">

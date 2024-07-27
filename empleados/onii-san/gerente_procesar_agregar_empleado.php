@@ -2,26 +2,33 @@
 include('connection.php');
 
 // Recibir datos del formulario
-$numero_serie = $_POST['numero_serie'];
-$estado = $_POST['estado'];
-$marca = $_POST['marca'];
-$modelo = $_POST['modelo'];
-$año = $_POST['año'];
-$cilindros = $_POST['cilindros'];
-$disponibilidad = $_POST['disponibilidad'];
-$precio_base = $_POST['precio_base'];
-$costo = $_POST['costo'];
-$cantidad_puertas = $_POST['cantidad_puertas'];
-$color = $_POST['color'];
+$nombre = $_POST['nombre'];
+$apellido = $_POST['apellido'];
+$telefono = $_POST['telefono'];
+$correo = $_POST['correo'];
+$direccion = $_POST['direccion'];
+$ciudad = $_POST['ciudad'];
+$codigo_postal = $_POST['codigo_postal'];
+$fecha_contrato = $_POST['fecha_contrato'];
+$numero_seguro = $_POST['numero_seguro'];
+$puesto = $_POST['puesto'];
+$turno = $_POST['turno'];
+$numero_cuenta = $_POST['numero_cuenta'];
+$sueldo_base = $_POST['sueldo_base'];
+$descuentos = $_POST['descuentos'];
+$comision = $_POST['comision'];
+$prestaciones = $_POST['prestaciones'];
+$capacitacion = $_POST['capacitacion'];
+$prestamos = $_POST['prestamos'];
 
 // Manejar la subida de la imagen
 $target_dir = "uploads/";
-$target_file = $target_dir . basename($_FILES["imagen_auto"]["name"]);
+$target_file = $target_dir . basename($_FILES["foto_empleado"]["name"]);
 $uploadOk = 1;
 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
 // Comprobar si el archivo es una imagen real
-$check = getimagesize($_FILES["imagen_auto"]["tmp_name"]);
+$check = getimagesize($_FILES["foto_empleado"]["tmp_name"]);
 if ($check !== false) {
     $uploadOk = 1;
 } else {
@@ -36,7 +43,7 @@ if (file_exists($target_file)) {
 }
 
 // Limitar el tamaño del archivo (por ejemplo, 5MB)
-if ($_FILES["imagen_auto"]["size"] > 5000000) {
+if ($_FILES["foto_empleado"]["size"] > 5000000) {
     $message = "El archivo es demasiado grande.";
     $uploadOk = 0;
 }
@@ -52,21 +59,20 @@ if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpe
 if ($uploadOk == 0) {
     $success = false;
 } else {
-    if (move_uploaded_file($_FILES["imagen_auto"]["tmp_name"], $target_file)) {
-        $imagen_auto = $target_file; // Ruta de la imagen
+    if (move_uploaded_file($_FILES["foto_empleado"]["tmp_name"], $target_file)) {
+        $foto_empleado = $target_file; // Ruta de la imagen
 
-        // Consulta para insertar datos en la tabla auto
-        $query = "INSERT INTO auto (
-            Numero_serie, estado, marca, modelo, año, cilindros, disponibilidad, 
-            precio_base, costo, cantidad_puertas, color, imagen_auto
-        ) VALUES (
-            '$numero_serie', '$estado', '$marca', '$modelo', '$año', '$cilindros', '$disponibilidad', 
-            '$precio_base', '$costo', '$cantidad_puertas', '$color', '$imagen_auto'
+        // Consulta para llamar al procedimiento almacenado
+        $query = "CALL add_empleado(
+            '$nombre', '$apellido', '$telefono', '$correo', '$direccion', '$ciudad', '$codigo_postal', 
+            '$fecha_contrato', '$numero_seguro', '$puesto', '$turno', '$numero_cuenta', 
+            '$sueldo_base', '$descuentos', '$comision', '$prestaciones', '$capacitacion', 
+            '$prestamos', '$foto_empleado'
         )";
 
         if (mysqli_query($conn, $query)) {
             $success = true;
-            $message = "Auto agregado exitosamente.";
+            $message = "Empleado agregado exitosamente.";
         } else {
             $success = false;
             $message = "Error: " . mysqli_error($conn);
@@ -86,7 +92,7 @@ mysqli_close($conn);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Auto</title>
+    <title>Agregar Empleado</title>
     <link rel="stylesheet" href="styles.css">
     <script>
         // Script para mostrar la fecha y hora actual
@@ -103,11 +109,10 @@ mysqli_close($conn);
         <!-- Lateral Navigation -->
         <nav class="nav">
             <ul>
-                <li><a href="pagina_gerente.php">Menú</a></li>
-                <li><a href="empleados.php">Empleados</a></li>
-                <li><a href="coches.php">Coches</a></li>
-                <li><a href="ventas.php">Ventas</a></li>
-                <li class="profile-button"><a href="perfil_gerente.php">Perfil</a></li>
+                <li><a href="gerente_main.php">Menú</a></li>
+                <li><a href="gerente_empleados.php">Empleados</a></li>
+                <li><a href="gerente_coches.php">Coches</a></li>
+                <li><a href="gerente_ventas.php">Ventas</a></li>
             </ul>
         </nav>
         
@@ -120,21 +125,21 @@ mysqli_close($conn);
                 </div>
                 <div id="date-time" class="date-time"></div>
                 <div class="welcome-message">
-                    <h1>Agregar Auto</h1>
+                    <h1>Agregar Empleado</h1>
                 </div>
             </header>
 
-            <!-- Formulario de Agregar Auto -->
+            <!-- Formulario de Agregar Empleado -->
             <main>
         <?php if ($success): ?>
             <div class="mensaje-exito">
                 <h1><?php echo $message; ?></h1>
-                <a href="coches.php">Consultar autos</a>
+                <a href="gerente_empleados.php">Consultar empleados</a>
             </div>
         <?php else: ?>
             <div class="mensaje-error">
                 <h1><?php echo $message; ?></h1>
-                <a href="agregar_auto.php">Intentar de nuevo</a>
+                <a href="gerente_agregar_empleado.php">Intentar de nuevo</a>
             </div>
         <?php endif; ?>
     </main>

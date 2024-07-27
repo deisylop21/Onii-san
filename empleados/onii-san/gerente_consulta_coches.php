@@ -33,11 +33,10 @@ if (!$result) {
         <!-- Lateral Navigation -->
         <nav class="nav">
             <ul>
-                <li><a href="pagina_gerente.php">Menú</a></li>
-                <li><a href="empleados.php">Empleados</a></li>
-                <li><a href="coches.php">Coches</a></li>
-                <li><a href="ventas.php">Ventas</a></li>
-                <li class="profile-button"><a href="perfil_gerente.php">Perfil</a></li>
+                <li><a href="gerente_main.php">Menú</a></li>
+                <li><a href="gerente_empleados.php">Empleados</a></li>
+                <li><a href="gerente_coches.php">Coches</a></li>
+                <li><a href="gerente_ventas.php">Ventas</a></li>
             </ul>
         </nav>
         

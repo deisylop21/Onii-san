@@ -47,11 +47,10 @@ if (isset($_POST['ID_empleado'])) {
         <!-- Lateral Navigation -->
         <nav class="nav">
             <ul>
-                <li><a href="pagina_gerente.php">Menú</a></li>
-                <li><a href="empleados.php">Empleados</a></li>
-                <li><a href="coches.php">Coches</a></li>
-                <li><a href="ventas.php">Ventas</a></li>
-                <li class="profile-button"><a href="perfil_gerente.php">Perfil</a></li>
+                <li><a href="gerente_main.php">Menú</a></li>
+                <li><a href="gerente_empleados.php">Empleados</a></li>
+                <li><a href="gerente_coches.php">Coches</a></li>
+                <li><a href="gerente_ventas.php">Ventas</a></li>
             </ul>
         </nav>
         
@@ -73,12 +72,12 @@ if (isset($_POST['ID_empleado'])) {
                 <?php if ($success): ?>
                     <div class="mensaje-exito">
                         <h1><?php echo htmlspecialchars($message); ?></h1>
-                        <a href="empleados.php">Consultar empleados</a>
+                        <a href="gerente_empleados.php">Consultar empleados</a>
                     </div>
                 <?php else: ?>
                     <div class="mensaje-error">
                         <h1><?php echo htmlspecialchars($message); ?></h1>
-                        <a href="empleados.php">Intentar de nuevo</a>
+                        <a href="gerente_empleados.php">Intentar de nuevo</a>
                     </div>
                 <?php endif; ?>
             </main>
