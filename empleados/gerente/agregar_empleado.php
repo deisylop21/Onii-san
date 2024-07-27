@@ -42,7 +42,7 @@
             </header>
 
             <!-- Formulario de Agregar Empleado -->
-            <form action="procesar_agregar_empleado.php" method="post">
+            <form action="procesar_agregar_empleado.php" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
                     <input type="text" id="nombre" name="nombre" required>
@@ -148,7 +148,7 @@
                     <input type="number" id="prestamos" name="prestamos" step="0.01" required>
                 </div>
                 
-                <div>
+                <div class="form-group">
                     <label for="foto_empleado">Foto del Empleado</label>
                     <input type="file" id="foto_empleado" name="foto_empleado" required>
                 </div>

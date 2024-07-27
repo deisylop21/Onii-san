@@ -1,9 +1,36 @@
+<?php
+include('connection.php');
+
+// Inicializa las variables para los mensajes y el estado de la operación
+$success = false;
+$message = '';
+
+if (isset($_POST['ID_empleado'])) {
+    $ID = $_POST['ID_empleado'];
+
+    // Prepara la llamada al procedimiento almacenado
+    $query = "CALL dar_de_baja_empleado('$ID')";
+
+    // Ejecuta la consulta
+    if (mysqli_query($conn, $query)) {
+        $success = true;
+        $message = 'Empleado dado de baja exitosamente.';
+    } else {
+        $success = false;
+        $message = 'Error al dar de baja al empleado: ' . mysqli_error($conn);
+    }
+
+    // Cierra la conexión
+    mysqli_close($conn);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel administrativo</title>
+    <title>Agregar Empleado</title>
     <link rel="stylesheet" href="styles.css">
     <script>
         // Script para mostrar la fecha y hora actual
@@ -37,17 +64,24 @@
                 </div>
                 <div id="date-time" class="date-time"></div>
                 <div class="welcome-message">
-                    <h1>Gestión de Empleados</h1>
+                    <h1>Agregar Empleado</h1>
                 </div>
             </header>
-            
-            <!-- Botones para consultar empleados por puesto -->
-            <div class="buttons">
-                <button onclick="window.location.href='consulta_empleados.php?puesto=Vendedor'">Consultar Vendedores</button>
-                <button onclick="window.location.href='consulta_empleados.php?puesto=Asesor'">Consultar Asesores</button>
-                <button onclick="window.location.href='consulta_empleados.php?puesto=Mecanico'">Consultar Mecánicos</button>
-                <button onclick="window.location.href='agregar_empleado.php'">Agregar Empleado</button>
-            </div>
+
+            <!-- Mensaje de éxito o error -->
+            <main>
+                <?php if ($success): ?>
+                    <div class="mensaje-exito">
+                        <h1><?php echo htmlspecialchars($message); ?></h1>
+                        <a href="empleados.php">Consultar empleados</a>
+                    </div>
+                <?php else: ?>
+                    <div class="mensaje-error">
+                        <h1><?php echo htmlspecialchars($message); ?></h1>
+                        <a href="empleados.php">Intentar de nuevo</a>
+                    </div>
+                <?php endif; ?>
+            </main>
         </div>
     </div>
 </body>

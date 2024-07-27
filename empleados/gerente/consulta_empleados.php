@@ -54,30 +54,44 @@ if (!$result) {
                 </div>
             </header>
             
-            <!-- Tabla de Empleados -->
-            <table class="table">
-                    <tr>
-                        <th>foto del empleado</th>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Puesto</th>
-                        <th>turno</th>
-                    </tr>
+            <!-- Cartas de empleados -->
+            <div class="cards">
                 <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($row['foto_empleado']); ?></td>
-                        <td><?php echo htmlspecialchars($row['ID_empleado']); ?></td>
-                        <td><?php echo htmlspecialchars($row['nombre']); ?></td>
-                        <td><?php echo htmlspecialchars($row['apellido']); ?></td>
-                        <td><?php echo htmlspecialchars($row['puesto']); ?></td>
-                        <td><?php echo htmlspecialchars($row['turno']); ?></td>
-                    </tr>
+                <div class="card">
+                    <p>Nombre: <?php echo htmlspecialchars($row['nombre']); ?> <?php echo htmlspecialchars($row['apellido']); ?></p>
+                    <p>Puesto: <?php echo htmlspecialchars($row['puesto']); ?></p>
+                    <p>Turno: <?php echo htmlspecialchars($row['turno']); ?></p>
+                    <img src="<?php echo htmlspecialchars($row['foto_empleado']); ?>" alt="Foto de <?php echo htmlspecialchars($row['nombre']); ?>" class="employee-photo">
+                    <div class="card-buttons">
+                        <form action="dar_de_baja.php" method="post" style="display:inline;" 
+                            data-nombre="<?php echo htmlspecialchars($row['nombre']); ?>" 
+                            data-apellido="<?php echo htmlspecialchars($row['apellido']); ?>"
+                            onsubmit="return confirmDeletion(this);">
+                            <input type="hidden" name="ID_empleado" class="btn-delete" value="<?php echo htmlspecialchars($row['ID_empleado']); ?>">
+                            <button type="submit" class="btn-delete">Dar de Baja</button>
+                        </form>
+                        <form action="editar_empleado.php" method="get" style="display:inline;">
+                            <input type="hidden" name="empleado_id" value="<?php echo htmlspecialchars($row['ID_empleado']); ?>">
+                            <button type="submit" class="btn-edit">Editar</button>
+                        </form>
+                    </div>
+                </div>
                 <?php endwhile; ?>
-            </table>
+            </div>
         </div>
     </div>
 </body>
+<script>
+    function confirmDeletion(form) {
+        // Obtener el nombre y apellido del formulario
+        var nombre = form.getAttribute('data-nombre');
+        var apellido = form.getAttribute('data-apellido');
+
+        // Mostrar el mensaje de confirmación
+        var mensaje = "¿Seguro que quiere dar de baja a " + nombre + " " + apellido + "?";
+        return confirm(mensaje);
+    }
+</script>
 </html>
 <?php
 mysqli_free_result($result);
