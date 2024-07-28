@@ -3,15 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('https://hips.hearstapps.com/es.h-cdn.co/cades/contenidos/lamborghini-sc18_(1).jpg?resize=980:*');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            background-repeat: no-repeat;
+        }
+
+        .login-container {
+            position: relative;
+            background-color: rgba(158, 158, 158, 0.8);
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+            z-index: 1;
+            border-radius: 10px;
+        }
+
+        .login-container form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .login-container label {
+            margin-top: 10px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .login-container input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #003670;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-container input[type="submit"]:hover {
+            background-color: #0069da;
+        }
+    </style>
 </head>
 <body>
-    <h2>Login Oniisan</h2>
-    <form action="autenticacion.php" method="post">
-        <label for="username">Username:</label>
-        <input type="text" name="username" required><br>
-        <label for="password">Password:</label>
-        <input type="password" name="password" required><br>
-        <input type="submit" value="Login">
-    </form>
+    <div class="login-container">
+        <h2>Login Oniisan</h2>
+        <form action="autenticacion.php" method="post">
+            <label for="username">Username:</label>
+            <input type="text" name="username" required><br>
+            <label for="password">Password:</label>
+            <input type="password" name="password" required><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
 </body>
 </html>
