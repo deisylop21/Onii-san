@@ -1,3 +1,18 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['username']) || !isset($_SESSION['puesto']) || !isset($_SESSION['ID_empleado']) || $_SESSION['puesto'] !== 'Gerente') {
+    header('Location: index.html');
+    exit;
+}
+
+include('connection.php');
+
+$link = $GLOBALS['link'];
+
+$id_empleado = $_SESSION['ID_empleado'];
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,7 +35,7 @@
         <!-- Lateral Navigation -->
         <nav class="nav">
             <ul>
-                <li><a href="gerente_main.php">Menú</a></li>
+                <li><a href="dashboard_gerente.php">Menú</a></li>
                 <li><a href="gerente_empleados.php">Empleados</a></li>
                 <li><a href="gerente_coches.php">Coches</a></li>
                 <li><a href="gerente_ventas.php">Ventas</a></li>

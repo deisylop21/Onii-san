@@ -1,6 +1,16 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['username']) || !isset($_SESSION['puesto']) || !isset($_SESSION['ID_empleado']) || $_SESSION['puesto'] !== 'Gerente') {
+    header('Location: index.html');
+    exit;
+}
+
 include('connection.php');
+
 $link = $GLOBALS['link'];
+
+$id_empleado = $_SESSION['ID_empleado'];
 
 $disponibilidad = $_GET['disponibilidad'];
 

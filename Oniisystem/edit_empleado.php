@@ -25,6 +25,7 @@ $empleado = $result->fetch_assoc();
 $stmt->close();
 $link->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -63,7 +64,7 @@ $link->close();
                 </div>
             </header>
 
-            <form action="update_empleado.php" method="post" enctype="multipart/form-data">
+            <form action="edit_procesar_empleado.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="id_empleado" value="<?php echo htmlspecialchars($empleado['ID_empleado']); ?>">
                 
                 <div class="form-group">

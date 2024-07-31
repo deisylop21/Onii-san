@@ -1,7 +1,7 @@
 <?php
 
 $user = 'root';
-$password = '';
+$password = '1234';
 $db = 'oniisan_alvarezlopeznarvaez_a';
 $host = 'localhost';
 $port = 3307;

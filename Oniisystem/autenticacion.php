@@ -1,64 +1,88 @@
 <?php
 session_start();
-require_once 'connection.php';
+include("connection.php");
 
-// Recibir los datos del formulario
+// Obtener los datos del formulario
 $username = $_POST['username'];
 $password = $_POST['password'];
 
-// Preparar la consulta para desencriptar y verificar la contraseña
-$sql = "SELECT id, username, email, puesto, AES_DECRYPT(password, 'llave_simetrica_OniiSan') AS decrypted_password FROM accounts WHERE username = ?";
+// Clave de desencriptación
+$key = 'llave_simetrica_OniiSan';
 
-if ($stmt = $link->prepare($sql)) {
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($id, $db_username, $email, $puesto, $decrypted_password);
-    $stmt->fetch();
-
-    if ($stmt->num_rows > 0) {
-        // Verificar la contraseña
-        if ($password === $decrypted_password) {
-            // La contraseña es correcta, iniciar sesión
-            $_SESSION['loggedin'] = true;
-            $_SESSION['id'] = $id;
-            $_SESSION['username'] = $db_username;
-            $_SESSION['email'] = $email;
-            $_SESSION['puesto'] = $puesto;
-
-            // Redirigir a la página correspondiente según el puesto
-            switch ($puesto) {
-                case 'Gerente':
-                    header("location: dashboard_gerente.php");
-                    break;
-                case 'Vendedor':
-                    header("location: dashboard_vendedor.php");
-                    break;
-                case 'Asesor':
-                    header("location: dashboard_asesor.php");
-                    break;
-                case 'Mecanico':
-                    header("location: dashboard_mecanico.php");
-                    break;
-                default:
-                    // Si el puesto no coincide con ninguno de los casos, redirigir a una página por defecto
-                    header("location: dashboard.php");
-                    break;
-            }
-            exit(); // Asegurarse de que no se ejecute más código después de la redirección
-        } else {
-            // La contraseña es incorrecta
-            echo "La contraseña es incorrecta.";
-        }
-    } else {
-        // El usuario no existe
-        echo "No se encontró una cuenta con ese nombre de usuario.";
-    }
-
-    $stmt->close();
-} else {
-    echo "Error en la consulta: " . $link->error;
+// Conectar a la base de datos
+$link = mysqli_init();
+if (!$link) {
+    die("Falló la inicialización de MySQLi.");
 }
 
-$link->close();
+if (!mysqli_real_connect($link, 'localhost', 'root', '1234', 'oniisan_alvarezlopeznarvaez_a', 3307)) {
+    die("Conexión fallida: " . mysqli_connect_error());
+}
+
+// Preparar y ejecutar la consulta para obtener el username y password encriptados
+$query = "SELECT username, password, puesto, ID_empleado FROM accounts WHERE AES_DECRYPT(username, ?) = ?";
+$stmt = mysqli_prepare($link, $query);
+mysqli_stmt_bind_param($stmt, "ss", $key, $username);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+if ($row = mysqli_fetch_assoc($result)) {
+    $encrypted_password = $row['password'];
+    $puesto = $row['puesto'];
+    $id_empleado = $row['ID_empleado'];
+    
+    // Desencriptar la contraseña
+    $query_decrypt_pass = "SELECT desencriptar_password(?) AS decrypted_password";
+    $stmt_decrypt_pass = mysqli_prepare($link, $query_decrypt_pass);
+    mysqli_stmt_bind_param($stmt_decrypt_pass, "s", $encrypted_password);
+    mysqli_stmt_execute($stmt_decrypt_pass);
+    $result_decrypt_pass = mysqli_stmt_get_result($stmt_decrypt_pass);
+
+    if ($row_decrypt_pass = mysqli_fetch_assoc($result_decrypt_pass)) {
+        $decrypted_password = $row_decrypt_pass['decrypted_password'];
+
+        // Comparar la contraseña desencriptada con la ingresada
+        if ($password === $decrypted_password) {
+            // Inicio de sesión exitoso
+            $_SESSION['username'] = $username;
+            $_SESSION['puesto'] = $puesto;
+            $_SESSION['ID_empleado'] = $id_empleado; // Almacenar ID_empleado en la sesión
+            
+            // Redirigir según el puesto
+            switch ($puesto) {
+                case 'Gerente':
+                    header("Location: dashboard_gerente.php");
+                    break;
+                case 'Vendedor':
+                    header("Location: dashboard_vendedor.php");
+                    break;
+                case 'Asesor':
+                    header("Location: dashboard_asesor.php");
+                    break;
+                case 'Mecanico':
+                    header("Location: dashboard_mecanico.php");
+                    break;
+                default:
+                    header("Location: index.html?error=puesto_desconocido");
+                    break;
+            }
+            exit();
+        } else {
+            // Contraseña incorrecta
+            header("Location: index.html?error=contraseña_incorrecta");
+            exit();
+        }
+    } else {
+        // Error al desencriptar la contraseña
+        header("Location: index.html?error=error_desencriptar_contrasena");
+        exit();
+    }
+} else {
+    // Nombre de usuario incorrecto o no encontrado
+    header("Location: index.html?error=usuario_incorrecto");
+    exit();
+}
+
+// Cerrar la conexión
+mysqli_close($link);
 ?>

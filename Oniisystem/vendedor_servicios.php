@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['username']) || !isset($_SESSION['puesto']) || !isset($_SESSION['ID_empleado']) || $_SESSION['puesto'] !== 'Gerente') {
+if (!isset($_SESSION['username']) || !isset($_SESSION['puesto']) || !isset($_SESSION['ID_empleado']) || $_SESSION['puesto'] !== 'Vendedor') {
     header('Location: index.html');
     exit;
 }
@@ -21,46 +21,39 @@ $id_empleado = $_SESSION['ID_empleado'];
     <title>Panel administrativo</title>
     <link rel="stylesheet" href="styles.css">
     <script>
-        // Script para mostrar la fecha y hora actual
         function updateDateTime() {
             const now = new Date();
             const dateTimeString = now.toLocaleString('es-ES', { dateStyle: 'full', timeStyle: 'medium' });
             document.getElementById('date-time').innerText = dateTimeString;
         }
-        setInterval(updateDateTime, 1000); // Actualizar cada segundo
+        setInterval(updateDateTime, 1000);
     </script>
 </head>
 <body>
     <div class="container">
-        <!-- Lateral Navigation -->
         <nav class="nav">
             <ul>
-                <li><a href="dashboard_gerente.php">Menú</a></li>
-                <li><a href="gerente_empleados.php">Empleados</a></li>
-                <li><a href="gerente_coches.php">Coches</a></li>
-                <li><a href="gerente_ventas.php">Ventas</a></li>
+                <li><a href="dashboard_vendedor.php">Menú</a></li>
+                <li><a href="vendedor_ventas.php">Ventas</a></li>
+                <li><a href="vendedor_servicios.php">Servicios</a></li>
+
             </ul>
         </nav>
-        
-        <!-- Main Content -->
         <div class="main-content">
-            <!-- Header -->
             <header>
                 <div class="logo">
                     <img src="logo.png" alt="Logo Empresa">
                 </div>
                 <div id="date-time" class="date-time"></div>
                 <div class="welcome-message">
-                    <h1>Gestión de Empleados</h1>
+                    <h1>Servicios</h1>
                 </div>
             </header>
-            
-            <!-- Botones para consultar empleados por puesto -->
             <div class="buttons">
-                <button onclick="window.location.href='gerente_con_emp.php?puesto=Vendedor'">Consultar Vendedores</button>
-                <button onclick="window.location.href='gerente_con_emp.php?puesto=Asesor'">Consultar Asesores</button>
-                <button onclick="window.location.href='gerente_con_emp.php?puesto=Mecánico'">Consultar Mecánicos</button>
-                <button onclick="window.location.href='add_empleado.php'">Agregar Empleado</button>
+                <button onclick="window.location.href='gerente_consulta_coches.php?disponibilidad=Disponible'">Consultar coches disponibles</button>
+                <button onclick="window.location.href='gerente_consulta_coches.php?disponibilidad=Vendido'">Consultar coches vendidos</button>
+                <button onclick="window.location.href='gerente_consulta_coches.php?disponibilidad=En servicio'">Consultar coches en servicio</button>
+                <button onclick="window.location.href='gerente_agregar_coches.php'">Agregar un nuevo coche</button>
             </div>
         </div>
     </div>

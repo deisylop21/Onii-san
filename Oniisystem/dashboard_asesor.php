@@ -1,83 +1,38 @@
 <?php
 session_start();
-
-if (!isset($_SESSION['username']) || !isset($_SESSION['puesto']) || !isset($_SESSION['ID_empleado']) || $_SESSION['puesto'] !== 'Gerente') {
-    header('Location: index.html');
+// Verificar si el usuario ha iniciado sesión y el puesto
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: login.html');
     exit;
 }
-
+// Incluir la conexión a la base de datos
 include('connection.php');
 
+// Asegúrate de que la variable global de conexión esté disponible
 $link = $GLOBALS['link'];
 
-$id_empleado = $_SESSION['ID_empleado'];
-
 // Consulta para el empleado "Vendedor" con más ventas
-$query1 = "SELECT v.ID_empleado, e.foto_empleado, v.nombre_empleado, v.apellido_empleado, COUNT(*) AS total_ventas FROM vista_ventas v
-            JOIN empleado e ON v.ID_empleado = e.ID_empleado
-            WHERE v.ID_venta IN (SELECT ID_venta FROM ventas WHERE Estado_Venta = 'Aprobado')
-            GROUP BY v.ID_empleado, e.foto_empleado, v.nombre_empleado, v.apellido_empleado
-            ORDER BY total_ventas DESC 
-            LIMIT 1;";
+$query1 = "SELECT ID_empleado, nombre_empleado, apellido_empleado, COUNT(*) AS total_ventas FROM vista_ventas GROUP BY ID_empleado ORDER BY total_ventas DESC LIMIT 1;";
 $result1 = mysqli_query($link, $query1);
-
-if ($result1) {
-    $vendedor_top = mysqli_fetch_assoc($result1);
-    if ($vendedor_top === null) {
-        $vendedor_top = ['ID_empleado' => 'No disponible', 'foto_empleado' => 'No disponible', 'nombre_empleado' => 'No disponible', 'apellido_empleado' => 'No disponible', 'total_ventas' => 'No disponible'];
-    }
-} else {
-    echo "Error en la consulta 1: " . mysqli_error($link);
-    $vendedor_top = ['ID_empleado' => 'Error', 'foto_empleado' => 'Error', 'nombre_empleado' => 'Error', 'apellido_empleado' => 'Error', 'total_ventas' => 'Error'];
-}
+$vendedor_top = mysqli_fetch_assoc($result1);
 
 // Consulta para la última venta realizada y el nombre del cliente
-$query2 = "SELECT v.ID_venta, c.nombre, c.apellido, v.fecha_venta FROM cliente c
-            JOIN ventas v ON c.ID_cliente = v.ID_cliente
-            WHERE v.fecha_venta = (SELECT MAX(fecha_venta) FROM ventas WHERE Estado_Venta = 'Aprobado');";
+$query2 = "SELECT nombre, apellido FROM cliente WHERE ID_cliente = (SELECT ID_cliente FROM ventas ORDER BY fecha_venta DESC LIMIT 1);";
 $result2 = mysqli_query($link, $query2);
-
-if ($result2) {
-    $ultima_venta = mysqli_fetch_assoc($result2);
-    if ($ultima_venta === null) {
-        $ultima_venta = ['ID_venta' => 'No disponible', 'nombre' => 'No disponible', 'apellido' => 'No disponible', 'fecha_venta' => 'No disponible'];
-    }
-} else {
-    echo "Error en la consulta 2: " . mysqli_error($link);
-    $ultima_venta = ['ID_venta' => 'Error', 'nombre' => 'Error', 'apellido' => 'Error', 'fecha_venta' => 'Error'];
-}
+$ultima_venta = mysqli_fetch_assoc($result2);
 
 // Consulta para el contador de ventas "Pendiente"
 $query3 = "SELECT COUNT(*) AS total_pendientes FROM ventas WHERE Estado_Venta = 'Pendiente'";
 $result3 = mysqli_query($link, $query3);
-
-if ($result3) {
-    $pendientes = mysqli_fetch_assoc($result3);
-    if ($pendientes === null) {
-        $pendientes = ['total_pendientes' => 'No disponible'];
-    }
-} else {
-    echo "Error en la consulta 3: " . mysqli_error($link);
-    $pendientes = ['total_pendientes' => 'Error'];
-}
+$pendientes = mysqli_fetch_assoc($result3);
 
 // Consulta para el contador de servicios "En proceso"
 $query4 = "SELECT COUNT(*) AS total_en_proceso FROM servicio WHERE estado_servicio = 'En proceso'";
 $result4 = mysqli_query($link, $query4);
-
-if ($result4) {
-    $en_proceso = mysqli_fetch_assoc($result4);
-    if ($en_proceso === null) {
-        $en_proceso = ['total_en_proceso' => 'No disponible'];
-    }
-} else {
-    echo "Error en la consulta 4: " . mysqli_error($link);
-    $en_proceso = ['total_en_proceso' => 'Error'];
-}
+$en_proceso = mysqli_fetch_assoc($result4);
 
 mysqli_close($link);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">

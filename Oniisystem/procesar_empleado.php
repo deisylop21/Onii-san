@@ -68,7 +68,7 @@ if ($uploadOk == 0) {
             '$nombre', '$apellido', '$telefono', '$correo', '$direccion', '$ciudad', '$codigo_postal', 
             '$fecha_contrato', '$numero_seguro', '$puesto', '$turno', '$numero_cuenta', 
             '$sueldo_base', '$descuentos', '$comision', '$prestaciones', '$capacitacion', 
-            '$prestamos', '$foto_empleado'
+            '$prestamos', '$foto_empleado', 
         )";
 
         if (mysqli_query($link, $query)) {
